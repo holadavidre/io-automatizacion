@@ -1,0 +1,16 @@
+[build]
+  publish = "dist"
+  command = "npm run build"
+
+# Proxy InfluxDB API to bypass CORS in production
+[[redirects]]
+  from = "/influx/*"
+  to = "http://52.3.203.186:8086/:splat"
+  status = 200
+  force = true
+
+# Single Page App routing fallback
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
