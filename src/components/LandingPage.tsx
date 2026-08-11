@@ -159,9 +159,6 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onOpenDashboard }) => 
             <a href="#servicios" className="hover:text-cyan-400 transition-colors">
               Servicios
             </a>
-            <a href="#telemetria" className="hover:text-cyan-400 transition-colors">
-              Telemetría Cloud
-            </a>
             <a href="#arquitectura" className="hover:text-cyan-400 transition-colors">
               Arquitectura IoT
             </a>
