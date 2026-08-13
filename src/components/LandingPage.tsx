@@ -141,14 +141,14 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onOpenDashboard }) => 
       <header className="sticky top-0 z-50 bg-slate-950/80 backdrop-blur-md border-b border-slate-800/80">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center text-slate-950 font-black text-lg shadow-lg shadow-cyan-500/20">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center text-slate-950 font-black text-lg shadow-lg shadow-cyan-500/20 shrink-0">
               IO
             </div>
             <div>
-              <span className="text-lg font-black tracking-tight text-white block leading-none">
+              <span className="text-base sm:text-lg font-black tracking-tight text-white block leading-none">
                 IO AUTOMATIZACIÓN
               </span>
-              <span className="text-[10px] text-cyan-400 font-semibold tracking-wider uppercase">
+              <span className="text-[9px] sm:text-[10px] text-cyan-400 font-semibold tracking-wider uppercase block mt-0.5">
                 Servicios Eléctricos & Control Industrial
               </span>
             </div>
@@ -170,8 +170,8 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onOpenDashboard }) => 
             </a>
           </nav>
 
-          {/* CTA Access Button */}
-          <div className="flex items-center gap-3">
+          {/* CTA Access Button (Hidden on Mobile, Visible on Desktop) */}
+          <div className="hidden md:flex items-center gap-3">
             <button
               onClick={openLoginModal}
               className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-bold text-xs shadow-lg shadow-cyan-500/25 hover:shadow-cyan-500/40 transition-all duration-300 transform hover:-translate-y-0.5 cursor-pointer"
