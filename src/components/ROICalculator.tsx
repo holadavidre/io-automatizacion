@@ -2,18 +2,18 @@ import React, { useState } from 'react';
 import { Calculator, ShieldAlert, Droplets, CheckCircle, Sparkles } from 'lucide-react';
 
 export const ROICalculator: React.FC = () => {
-  const [estanqueCapacity, setEstanqueCapacity] = useState<number>(500); // m³
-  const [costoAguaM3, setCostoAguaM3] = useState<number>(1800); // CLP / m³
-  const [fugaHorasEstimadas, setFugaHorasEstimadas] = useState<number>(12); // horas sin detección manual
+  const [capacidadLitros, setCapacidadLitros] = useState<number>(35000); // Litros
+  const [costoPetroleoLitro, setCostoPetroleoLitro] = useState<number>(1050); // CLP / Litro
+  const [porcentajeError, setPorcentajeError] = useState<number>(5); // % de error en medición manual / mermas
 
   // Cálculos de ahorro
-  const perdidaPorEventoM3 = (estanqueCapacity * 0.45 * fugaHorasEstimadas) / 12;
-  const costoPerdidaSinMonitoreo = perdidaPorEventoM3 * costoAguaM3;
+  const perdidaLitros = capacidadLitros * (porcentajeError / 100);
+  const costoPerdidaSinMonitoreo = perdidaLitros * costoPetroleoLitro;
   
-  // Con monitoreo en tiempo real IO (alerta en 30s)
-  const costoPerdidaConIO = (perdidaPorEventoM3 * 0.05) * costoAguaM3;
-  const ahorroPorEvento = costoPerdidaSinMonitoreo - costoPerdidaConIO;
-  const ahorroAnualEstimado = ahorroPorEvento * 4; // 4 eventos de desborde/variación al año
+  // Con monitoreo en tiempo real IO (precisión > 99.5%, margen de error reducido a 0.25%)
+  const costoPerdidaConIO = costoPerdidaSinMonitoreo * 0.05;
+  const ahorroPorMedicion = costoPerdidaSinMonitoreo - costoPerdidaConIO;
+  const ahorroAnualEstimado = ahorroPorMedicion * 12; // 12 ciclos de llenado/control al año
 
   return (
     <div className="py-12 glass-panel rounded-3xl p-6 sm:p-10 border-cyan-500/20 my-8">
@@ -25,58 +25,58 @@ export const ROICalculator: React.FC = () => {
           </div>
 
           <h3 className="text-2xl sm:text-3xl font-extrabold text-white">
-            ¿Cuánto ahorra tu salmonera con <span className="text-gradient-cyan">monitoreo en tiempo real</span>?
+            ¿Cuánto ahorras en <span className="text-gradient-cyan">control de Petróleo y Combustible</span>?
           </h3>
 
           <p className="text-sm text-slate-400 leading-relaxed">
-            Simula las pérdidas por rebalse de estanques o anomalías de caudal no detectadas a tiempo en comparación con alertas automatizadas cada 30 segundos.
+            Simula el ahorro financiero al eliminar mermas, descuadres o errores de medición manual en estanques de combustible mediante sensores continuos de alta precisión.
           </p>
 
           <div className="space-y-5 pt-2">
             <div>
               <div className="flex justify-between text-xs font-medium text-slate-300 mb-2">
-                <span>Capacidad Total Estanques / Red:</span>
-                <span className="text-cyan-400 font-bold">{estanqueCapacity} m³</span>
+                <span>Capacidad Total Estanque(s):</span>
+                <span className="text-cyan-400 font-bold">{capacidadLitros.toLocaleString('es-CL')} Litros</span>
               </div>
               <input
                 type="range"
-                min="100"
-                max="3000"
-                step="50"
-                value={estanqueCapacity}
-                onChange={(e) => setEstanqueCapacity(Number(e.target.value))}
+                min="5000"
+                max="200000"
+                step="5000"
+                value={capacidadLitros}
+                onChange={(e) => setCapacidadLitros(Number(e.target.value))}
                 className="w-full h-2 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-cyan-400"
               />
             </div>
 
             <div>
               <div className="flex justify-between text-xs font-medium text-slate-300 mb-2">
-                <span>Costo estimado por m³ de Agua / RILes:</span>
-                <span className="text-cyan-400 font-bold">${costoAguaM3.toLocaleString('es-CL')} CLP</span>
+                <span>Costo estimado por Litro de Petróleo / Combustible:</span>
+                <span className="text-cyan-400 font-bold">${costoPetroleoLitro.toLocaleString('es-CL')} CLP</span>
               </div>
               <input
                 type="range"
-                min="500"
-                max="5000"
-                step="100"
-                value={costoAguaM3}
-                onChange={(e) => setCostoAguaM3(Number(e.target.value))}
+                min="700"
+                max="2000"
+                step="10"
+                value={costoPetroleoLitro}
+                onChange={(e) => setCostoPetroleoLitro(Number(e.target.value))}
                 className="w-full h-2 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-cyan-400"
               />
             </div>
 
             <div>
               <div className="flex justify-between text-xs font-medium text-slate-300 mb-2">
-                <span>Tiempo de respuesta inspección manual (sin sensor):</span>
-                <span className="text-cyan-400 font-bold">{fugaHorasEstimadas} Horas</span>
+                <span>Porcentaje de error / descuadre en medición manual:</span>
+                <span className="text-cyan-400 font-bold">{porcentajeError}%</span>
               </div>
               <input
                 type="range"
-                min="2"
-                max="48"
-                step="2"
-                value={fugaHorasEstimadas}
-                onChange={(e) => setFugaHorasEstimadas(Number(e.target.value))}
+                min="1"
+                max="15"
+                step="0.5"
+                value={porcentajeError}
+                onChange={(e) => setPorcentajeError(Number(e.target.value))}
                 className="w-full h-2 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-cyan-400"
               />
             </div>
@@ -98,7 +98,7 @@ export const ROICalculator: React.FC = () => {
             </div>
 
             <div className="my-6">
-              <span className="text-xs text-slate-400 block mb-1">Ahorro anual estimado (base 4 eventos prevendidos):</span>
+              <span className="text-xs text-slate-400 block mb-1">Ahorro anual estimado (base 12 controles/llenados al año):</span>
               <div className="text-3xl sm:text-4xl font-extrabold text-gradient-cyan">
                 ${Math.round(ahorroAnualEstimado).toLocaleString('es-CL')} CLP
               </div>
@@ -110,21 +110,21 @@ export const ROICalculator: React.FC = () => {
             <div className="space-y-3 pt-4 border-t border-slate-800 text-xs">
               <div className="flex items-center justify-between text-slate-300">
                 <span className="flex items-center gap-2">
-                  <ShieldAlert className="w-4 h-4 text-rose-400" /> Pérdida potencial sin sensores:
+                  <ShieldAlert className="w-4 h-4 text-rose-400" /> Descuadre potencial sin telemetría ({porcentajeError}%):
                 </span>
                 <span className="font-bold text-rose-400">${Math.round(costoPerdidaSinMonitoreo).toLocaleString('es-CL')} CLP</span>
               </div>
               <div className="flex items-center justify-between text-slate-300">
                 <span className="flex items-center gap-2">
-                  <Droplets className="w-4 h-4 text-cyan-400" /> Pérdida contenida con IO Automatización:
+                  <Droplets className="w-4 h-4 text-cyan-400" /> Margen controlado con IO Automatización:
                 </span>
                 <span className="font-bold text-cyan-400">${Math.round(costoPerdidaConIO).toLocaleString('es-CL')} CLP</span>
               </div>
               <div className="flex items-center justify-between text-emerald-400 pt-2 border-t border-slate-800/80 font-bold">
                 <span className="flex items-center gap-2">
-                  <CheckCircle className="w-4 h-4 text-emerald-400" /> Reducción de riesgo operativo:
+                  <CheckCircle className="w-4 h-4 text-emerald-400" /> Precisión en medición continua:
                 </span>
-                <span>95% Eficiencia</span>
+                <span>99.5% Precisión</span>
               </div>
             </div>
           </div>
