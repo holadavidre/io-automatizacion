@@ -73,14 +73,21 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onOpenDashboard }) => 
       return;
     }
     setIsLoggingIn(true);
-    // Simulate authentication
+    
+    // Validar credenciales de acceso a empresas
     setTimeout(() => {
       setIsLoggingIn(false);
-      // For now, accept any credentials and open dashboard
-      setShowLoginModal(false);
-      setLoginData({ usuario: '', password: '' });
-      onOpenDashboard();
-    }, 1500);
+      const userClean = loginData.usuario.trim().toLowerCase();
+      const passClean = loginData.password.trim();
+
+      if (userClean === 'admin' && passClean === 'ioautomatizacion') {
+        setShowLoginModal(false);
+        setLoginData({ usuario: '', password: '' });
+        onOpenDashboard();
+      } else {
+        setLoginError('Usuario o contraseña incorrectos. Verifique sus datos.');
+      }
+    }, 800);
   };
 
   const openLoginModal = () => {
